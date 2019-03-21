@@ -30,6 +30,7 @@ func SetupDatabase() {
 	}
 	//Make our database connection public by setting it to the global variable.
 	Database = db
+	log.Println("[Database] Connection Established")
 
 	//Check if the connection is still alive, will error if not so the connection hasnt worked.
 	Database.Ping()

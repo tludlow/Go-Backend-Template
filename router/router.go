@@ -20,6 +20,7 @@ func CreateRouter() {
 
 	//We have our required port stored within the .env file, load that as a string so the router can use it.
 	httpPort := os.Getenv("HTTP_PORT")
+	log.Println("[Router] Starting the HTTP Router.")
 	Router.Run(":" + httpPort)
-	log.Println("Starting the HTTP Router.")
+
 }
