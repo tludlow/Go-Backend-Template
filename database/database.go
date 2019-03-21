@@ -19,8 +19,9 @@ func SetupDatabase() {
 	password := os.Getenv("DATABASE_PASSWORD")
 	databaseName := os.Getenv("DATABASE_NAME")
 
-	//The DSN must follow the pattern "mysql://john:pass@localhost:3306/my_db"
-	databaseDSN := "mysql://" + username + ":" + password + "@localhost:3306/" + databaseName
+	//The DSN must follow the pattern "john:pass@/my_db"
+	//You can add a domain between @ and / to connect to a remote database
+	databaseDSN := username + ":" + password + "@/" + databaseName + "?parseTime=true&charset=utf8mb4"
 
 	db, err := sql.Open("mysql", databaseDSN)
 

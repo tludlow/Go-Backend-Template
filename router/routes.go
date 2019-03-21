@@ -1,6 +1,8 @@
 package router
 
 import (
+	"billy-maths/database"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,15 +17,38 @@ import (
 func setupRoutesV1() {
 	v1 := Router.Group("/v1")
 	{
-		v1.GET("/testing/:name", testRoute)
+		v1.POST("/enter/:name", enterNewUser)
 	}
 }
 
-func testRoute(c *gin.Context) {
-	givenName := c.Param("name")
+func enterNewUser(c *gin.Context) {
+	name := c.Param("name")
+
+	statement, err := database.Database.Prepare("INSERT INTO users (name) VALUES (?)")
+
+	if err != nil {
+		log.Fatalln(err)
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "Failed to prepare to add the user '" + name + "' to the database",
+		})
+		return
+	}
+
+	_, err = statement.Exec(name)
+
+	if err != nil {
+		log.Fatalln(err)
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "Failed to add the user '" + name + "' to the database",
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Hello, and welcome to Billy-Maths",
-		"name":    "Your name is, " + givenName,
+		"success": true,
+		"message": "Inserted the new user into the database",
 	})
+	return
 }
